@@ -4,7 +4,7 @@
 // 	protoc        v3.19.2
 // source: users.proto
 
-package investAPI
+package investapi
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Тип счёта.
+//Тип счёта.
 type AccountType int32
 
 const (
@@ -74,7 +74,7 @@ func (AccountType) EnumDescriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{0}
 }
 
-// Статус счёта.
+//Статус счёта.
 type AccountStatus int32
 
 const (
@@ -127,7 +127,7 @@ func (AccountStatus) EnumDescriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{1}
 }
 
-// Запрос получения счетов не имеет входных параметров
+//Запрос получения счетов пользователя.
 type GetAccountsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -166,7 +166,7 @@ func (*GetAccountsRequest) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{0}
 }
 
-// Ответ на запрос получения счетов.
+//Список счетов пользователя.
 type GetAccountsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -215,7 +215,7 @@ func (x *GetAccountsResponse) GetAccounts() []*Account {
 	return nil
 }
 
-// Счёт клиента.
+//Информация о счёте.
 type Account struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -309,7 +309,7 @@ func (x *Account) GetClosedDate() *timestamppb.Timestamp {
 	return nil
 }
 
-// Запрос маржинальных показателей по счёту
+//Запрос маржинальных показателей по счёту
 type GetMarginAttributesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -358,7 +358,7 @@ func (x *GetMarginAttributesRequest) GetAccountId() string {
 	return ""
 }
 
-// Маржинальные показатели по счёту.
+//Маржинальные показатели по счёту.
 type GetMarginAttributesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -443,6 +443,7 @@ func (x *GetMarginAttributesResponse) GetAmountOfMissingFunds() *MoneyValue {
 	return nil
 }
 
+//Запрос текущих лимитов пользователя.
 type GetUserTariffRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -481,6 +482,7 @@ func (*GetUserTariffRequest) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{5}
 }
 
+//Текущие лимиты пользователя.
 type GetUserTariffResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -536,6 +538,7 @@ func (x *GetUserTariffResponse) GetStreamLimits() []*StreamLimit {
 	return nil
 }
 
+//Лимит unary-методов.
 type UnaryLimit struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -591,6 +594,7 @@ func (x *UnaryLimit) GetMethods() []string {
 	return nil
 }
 
+//Лимит stream-соединений.
 type StreamLimit struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -646,6 +650,7 @@ func (x *StreamLimit) GetStreams() []string {
 	return nil
 }
 
+//Запрос информации о пользователе.
 type GetInfoRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -684,6 +689,7 @@ func (*GetInfoRequest) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{9}
 }
 
+//Информация о пользователе.
 type GetInfoResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -905,13 +911,13 @@ var file_users_proto_rawDesc = []byte{
 	0x66, 0x66, 0x2e, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x2e, 0x69, 0x6e, 0x76, 0x65, 0x73, 0x74,
 	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x2e, 0x76, 0x31,
 	0x2e, 0x47, 0x65, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x42, 0x66, 0x0a, 0x1c, 0x72, 0x75, 0x2e, 0x74, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x2e, 0x70,
+	0x42, 0x61, 0x0a, 0x1c, 0x72, 0x75, 0x2e, 0x74, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x2e, 0x70,
 	0x69, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x2e, 0x76, 0x31,
-	0x50, 0x01, 0x5a, 0x11, 0x54, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x2f, 0x69, 0x6e, 0x76, 0x65,
-	0x73, 0x74, 0x41, 0x50, 0x49, 0xa2, 0x02, 0x05, 0x54, 0x49, 0x41, 0x50, 0x49, 0xaa, 0x02, 0x14,
-	0x54, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x2e, 0x49, 0x6e, 0x76, 0x65, 0x73, 0x74, 0x41, 0x50,
-	0x49, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x11, 0x54, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x5c, 0x49,
-	0x6e, 0x76, 0x65, 0x73, 0x74, 0x5c, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x50, 0x01, 0x5a, 0x0c, 0x2e, 0x2f, 0x3b, 0x69, 0x6e, 0x76, 0x65, 0x73, 0x74, 0x61, 0x70, 0x69,
+	0xa2, 0x02, 0x05, 0x54, 0x49, 0x41, 0x50, 0x49, 0xaa, 0x02, 0x14, 0x54, 0x69, 0x6e, 0x6b, 0x6f,
+	0x66, 0x66, 0x2e, 0x49, 0x6e, 0x76, 0x65, 0x73, 0x74, 0x41, 0x70, 0x69, 0x2e, 0x56, 0x31, 0xca,
+	0x02, 0x11, 0x54, 0x69, 0x6e, 0x6b, 0x6f, 0x66, 0x66, 0x5c, 0x49, 0x6e, 0x76, 0x65, 0x73, 0x74,
+	0x5c, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
