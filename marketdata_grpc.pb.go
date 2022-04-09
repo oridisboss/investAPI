@@ -26,6 +26,8 @@ type MarketDataServiceClient interface {
 	GetOrderBook(ctx context.Context, in *GetOrderBookRequest, opts ...grpc.CallOption) (*GetOrderBookResponse, error)
 	//Метод запроса статуса торгов по инструментам.
 	GetTradingStatus(ctx context.Context, in *GetTradingStatusRequest, opts ...grpc.CallOption) (*GetTradingStatusResponse, error)
+	//Метод запроса последних обезличенных сделок по инструменту.
+	GetLastTrades(ctx context.Context, in *GetLastTradesRequest, opts ...grpc.CallOption) (*GetLastTradesResponse, error)
 }
 
 type marketDataServiceClient struct {
@@ -72,6 +74,15 @@ func (c *marketDataServiceClient) GetTradingStatus(ctx context.Context, in *GetT
 	return out, nil
 }
 
+func (c *marketDataServiceClient) GetLastTrades(ctx context.Context, in *GetLastTradesRequest, opts ...grpc.CallOption) (*GetLastTradesResponse, error) {
+	out := new(GetLastTradesResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastTrades", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketDataServiceServer is the server API for MarketDataService service.
 // All implementations must embed UnimplementedMarketDataServiceServer
 // for forward compatibility
@@ -84,6 +95,8 @@ type MarketDataServiceServer interface {
 	GetOrderBook(context.Context, *GetOrderBookRequest) (*GetOrderBookResponse, error)
 	//Метод запроса статуса торгов по инструментам.
 	GetTradingStatus(context.Context, *GetTradingStatusRequest) (*GetTradingStatusResponse, error)
+	//Метод запроса последних обезличенных сделок по инструменту.
+	GetLastTrades(context.Context, *GetLastTradesRequest) (*GetLastTradesResponse, error)
 	mustEmbedUnimplementedMarketDataServiceServer()
 }
 
@@ -102,6 +115,9 @@ func (UnimplementedMarketDataServiceServer) GetOrderBook(context.Context, *GetOr
 }
 func (UnimplementedMarketDataServiceServer) GetTradingStatus(context.Context, *GetTradingStatusRequest) (*GetTradingStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTradingStatus not implemented")
+}
+func (UnimplementedMarketDataServiceServer) GetLastTrades(context.Context, *GetLastTradesRequest) (*GetLastTradesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLastTrades not implemented")
 }
 func (UnimplementedMarketDataServiceServer) mustEmbedUnimplementedMarketDataServiceServer() {}
 
@@ -188,6 +204,24 @@ func _MarketDataService_GetTradingStatus_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketDataService_GetLastTrades_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLastTradesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDataServiceServer).GetLastTrades(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastTrades",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDataServiceServer).GetLastTrades(ctx, req.(*GetLastTradesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MarketDataService_ServiceDesc is the grpc.ServiceDesc for MarketDataService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +244,10 @@ var MarketDataService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTradingStatus",
 			Handler:    _MarketDataService_GetTradingStatus_Handler,
+		},
+		{
+			MethodName: "GetLastTrades",
+			Handler:    _MarketDataService_GetLastTrades_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

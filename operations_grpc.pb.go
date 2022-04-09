@@ -26,6 +26,10 @@ type OperationsServiceClient interface {
 	GetPositions(ctx context.Context, in *PositionsRequest, opts ...grpc.CallOption) (*PositionsResponse, error)
 	//Метод получения доступного остатка для вывода средств.
 	GetWithdrawLimits(ctx context.Context, in *WithdrawLimitsRequest, opts ...grpc.CallOption) (*WithdrawLimitsResponse, error)
+	//Метод получения брокерского отчёта.
+	GetBrokerReport(ctx context.Context, in *BrokerReportRequest, opts ...grpc.CallOption) (*BrokerReportResponse, error)
+	//Метод получения отчёта "Справка о доходах за пределами РФ".
+	GetDividendsForeignIssuer(ctx context.Context, in *GetDividendsForeignIssuerRequest, opts ...grpc.CallOption) (*GetDividendsForeignIssuerResponse, error)
 }
 
 type operationsServiceClient struct {
@@ -72,6 +76,24 @@ func (c *operationsServiceClient) GetWithdrawLimits(ctx context.Context, in *Wit
 	return out, nil
 }
 
+func (c *operationsServiceClient) GetBrokerReport(ctx context.Context, in *BrokerReportRequest, opts ...grpc.CallOption) (*BrokerReportResponse, error) {
+	out := new(BrokerReportResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.OperationsService/GetBrokerReport", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operationsServiceClient) GetDividendsForeignIssuer(ctx context.Context, in *GetDividendsForeignIssuerRequest, opts ...grpc.CallOption) (*GetDividendsForeignIssuerResponse, error) {
+	out := new(GetDividendsForeignIssuerResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.OperationsService/GetDividendsForeignIssuer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OperationsServiceServer is the server API for OperationsService service.
 // All implementations must embed UnimplementedOperationsServiceServer
 // for forward compatibility
@@ -84,6 +106,10 @@ type OperationsServiceServer interface {
 	GetPositions(context.Context, *PositionsRequest) (*PositionsResponse, error)
 	//Метод получения доступного остатка для вывода средств.
 	GetWithdrawLimits(context.Context, *WithdrawLimitsRequest) (*WithdrawLimitsResponse, error)
+	//Метод получения брокерского отчёта.
+	GetBrokerReport(context.Context, *BrokerReportRequest) (*BrokerReportResponse, error)
+	//Метод получения отчёта "Справка о доходах за пределами РФ".
+	GetDividendsForeignIssuer(context.Context, *GetDividendsForeignIssuerRequest) (*GetDividendsForeignIssuerResponse, error)
 	mustEmbedUnimplementedOperationsServiceServer()
 }
 
@@ -102,6 +128,12 @@ func (UnimplementedOperationsServiceServer) GetPositions(context.Context, *Posit
 }
 func (UnimplementedOperationsServiceServer) GetWithdrawLimits(context.Context, *WithdrawLimitsRequest) (*WithdrawLimitsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWithdrawLimits not implemented")
+}
+func (UnimplementedOperationsServiceServer) GetBrokerReport(context.Context, *BrokerReportRequest) (*BrokerReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBrokerReport not implemented")
+}
+func (UnimplementedOperationsServiceServer) GetDividendsForeignIssuer(context.Context, *GetDividendsForeignIssuerRequest) (*GetDividendsForeignIssuerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDividendsForeignIssuer not implemented")
 }
 func (UnimplementedOperationsServiceServer) mustEmbedUnimplementedOperationsServiceServer() {}
 
@@ -188,6 +220,42 @@ func _OperationsService_GetWithdrawLimits_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OperationsService_GetBrokerReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BrokerReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperationsServiceServer).GetBrokerReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.OperationsService/GetBrokerReport",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperationsServiceServer).GetBrokerReport(ctx, req.(*BrokerReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperationsService_GetDividendsForeignIssuer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDividendsForeignIssuerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperationsServiceServer).GetDividendsForeignIssuer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.OperationsService/GetDividendsForeignIssuer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperationsServiceServer).GetDividendsForeignIssuer(ctx, req.(*GetDividendsForeignIssuerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OperationsService_ServiceDesc is the grpc.ServiceDesc for OperationsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +278,14 @@ var OperationsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWithdrawLimits",
 			Handler:    _OperationsService_GetWithdrawLimits_Handler,
+		},
+		{
+			MethodName: "GetBrokerReport",
+			Handler:    _OperationsService_GetBrokerReport_Handler,
+		},
+		{
+			MethodName: "GetDividendsForeignIssuer",
+			Handler:    _OperationsService_GetDividendsForeignIssuer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

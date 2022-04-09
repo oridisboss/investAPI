@@ -24,6 +24,8 @@ type InstrumentsServiceClient interface {
 	BondBy(ctx context.Context, in *InstrumentRequest, opts ...grpc.CallOption) (*BondResponse, error)
 	//Метод получения списка облигаций.
 	Bonds(ctx context.Context, in *InstrumentsRequest, opts ...grpc.CallOption) (*BondsResponse, error)
+	//Метод получения графика выплат купонов по облигации
+	GetBondCoupons(ctx context.Context, in *GetBondCouponsRequest, opts ...grpc.CallOption) (*GetBondCouponsResponse, error)
 	//Метод получения валюты по её идентификатору.
 	CurrencyBy(ctx context.Context, in *InstrumentRequest, opts ...grpc.CallOption) (*CurrencyResponse, error)
 	//Метод получения списка валют.
@@ -48,6 +50,10 @@ type InstrumentsServiceClient interface {
 	GetInstrumentBy(ctx context.Context, in *InstrumentRequest, opts ...grpc.CallOption) (*InstrumentResponse, error)
 	//Метод для получения событий выплаты дивидендов по инструменту.
 	GetDividends(ctx context.Context, in *GetDividendsRequest, opts ...grpc.CallOption) (*GetDividendsResponse, error)
+	//Метод получения актива по его идентификатору.
+	GetAssetBy(ctx context.Context, in *AssetRequest, opts ...grpc.CallOption) (*AssetResponse, error)
+	//Метод получения списка активов.
+	GetAssets(ctx context.Context, in *AssetsRequest, opts ...grpc.CallOption) (*AssetsResponse, error)
 }
 
 type instrumentsServiceClient struct {
@@ -79,6 +85,15 @@ func (c *instrumentsServiceClient) BondBy(ctx context.Context, in *InstrumentReq
 func (c *instrumentsServiceClient) Bonds(ctx context.Context, in *InstrumentsRequest, opts ...grpc.CallOption) (*BondsResponse, error) {
 	out := new(BondsResponse)
 	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Bonds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *instrumentsServiceClient) GetBondCoupons(ctx context.Context, in *GetBondCouponsRequest, opts ...grpc.CallOption) (*GetBondCouponsResponse, error) {
+	out := new(GetBondCouponsResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBondCoupons", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -193,6 +208,24 @@ func (c *instrumentsServiceClient) GetDividends(ctx context.Context, in *GetDivi
 	return out, nil
 }
 
+func (c *instrumentsServiceClient) GetAssetBy(ctx context.Context, in *AssetRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssetBy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *instrumentsServiceClient) GetAssets(ctx context.Context, in *AssetsRequest, opts ...grpc.CallOption) (*AssetsResponse, error) {
+	out := new(AssetsResponse)
+	err := c.cc.Invoke(ctx, "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssets", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InstrumentsServiceServer is the server API for InstrumentsService service.
 // All implementations must embed UnimplementedInstrumentsServiceServer
 // for forward compatibility
@@ -203,6 +236,8 @@ type InstrumentsServiceServer interface {
 	BondBy(context.Context, *InstrumentRequest) (*BondResponse, error)
 	//Метод получения списка облигаций.
 	Bonds(context.Context, *InstrumentsRequest) (*BondsResponse, error)
+	//Метод получения графика выплат купонов по облигации
+	GetBondCoupons(context.Context, *GetBondCouponsRequest) (*GetBondCouponsResponse, error)
 	//Метод получения валюты по её идентификатору.
 	CurrencyBy(context.Context, *InstrumentRequest) (*CurrencyResponse, error)
 	//Метод получения списка валют.
@@ -227,6 +262,10 @@ type InstrumentsServiceServer interface {
 	GetInstrumentBy(context.Context, *InstrumentRequest) (*InstrumentResponse, error)
 	//Метод для получения событий выплаты дивидендов по инструменту.
 	GetDividends(context.Context, *GetDividendsRequest) (*GetDividendsResponse, error)
+	//Метод получения актива по его идентификатору.
+	GetAssetBy(context.Context, *AssetRequest) (*AssetResponse, error)
+	//Метод получения списка активов.
+	GetAssets(context.Context, *AssetsRequest) (*AssetsResponse, error)
 	mustEmbedUnimplementedInstrumentsServiceServer()
 }
 
@@ -242,6 +281,9 @@ func (UnimplementedInstrumentsServiceServer) BondBy(context.Context, *Instrument
 }
 func (UnimplementedInstrumentsServiceServer) Bonds(context.Context, *InstrumentsRequest) (*BondsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Bonds not implemented")
+}
+func (UnimplementedInstrumentsServiceServer) GetBondCoupons(context.Context, *GetBondCouponsRequest) (*GetBondCouponsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBondCoupons not implemented")
 }
 func (UnimplementedInstrumentsServiceServer) CurrencyBy(context.Context, *InstrumentRequest) (*CurrencyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrencyBy not implemented")
@@ -278,6 +320,12 @@ func (UnimplementedInstrumentsServiceServer) GetInstrumentBy(context.Context, *I
 }
 func (UnimplementedInstrumentsServiceServer) GetDividends(context.Context, *GetDividendsRequest) (*GetDividendsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDividends not implemented")
+}
+func (UnimplementedInstrumentsServiceServer) GetAssetBy(context.Context, *AssetRequest) (*AssetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAssetBy not implemented")
+}
+func (UnimplementedInstrumentsServiceServer) GetAssets(context.Context, *AssetsRequest) (*AssetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAssets not implemented")
 }
 func (UnimplementedInstrumentsServiceServer) mustEmbedUnimplementedInstrumentsServiceServer() {}
 
@@ -342,6 +390,24 @@ func _InstrumentsService_Bonds_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(InstrumentsServiceServer).Bonds(ctx, req.(*InstrumentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InstrumentsService_GetBondCoupons_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBondCouponsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InstrumentsServiceServer).GetBondCoupons(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBondCoupons",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InstrumentsServiceServer).GetBondCoupons(ctx, req.(*GetBondCouponsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -562,6 +628,42 @@ func _InstrumentsService_GetDividends_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InstrumentsService_GetAssetBy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InstrumentsServiceServer).GetAssetBy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssetBy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InstrumentsServiceServer).GetAssetBy(ctx, req.(*AssetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InstrumentsService_GetAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InstrumentsServiceServer).GetAssets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssets",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InstrumentsServiceServer).GetAssets(ctx, req.(*AssetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // InstrumentsService_ServiceDesc is the grpc.ServiceDesc for InstrumentsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -580,6 +682,10 @@ var InstrumentsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Bonds",
 			Handler:    _InstrumentsService_Bonds_Handler,
+		},
+		{
+			MethodName: "GetBondCoupons",
+			Handler:    _InstrumentsService_GetBondCoupons_Handler,
 		},
 		{
 			MethodName: "CurrencyBy",
@@ -628,6 +734,14 @@ var InstrumentsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDividends",
 			Handler:    _InstrumentsService_GetDividends_Handler,
+		},
+		{
+			MethodName: "GetAssetBy",
+			Handler:    _InstrumentsService_GetAssetBy_Handler,
+		},
+		{
+			MethodName: "GetAssets",
+			Handler:    _InstrumentsService_GetAssets_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
